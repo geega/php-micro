@@ -1,6 +1,7 @@
 {
   "name": "geega/php-micro",
   "description": "Simple micro php framework",
+  "version": "0.0.1",
   "autoload": {
     "psr-4": {
       "Geega\\Micro\\": "src/"
