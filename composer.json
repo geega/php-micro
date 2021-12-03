@@ -1,0 +1,17 @@
+{
+  "name": "geega/php-micro",
+  "description": "Simple micro php framework",
+  "autoload": {
+    "psr-4": {
+      "Geega\\Micro\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "geega",
+      "email": "varpihovsky@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {}
+}
