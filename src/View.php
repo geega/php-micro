@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Geega\Micro;
 
 use Geega\Micro\Http\ResponseInterface;
@@ -17,12 +16,12 @@ class View
      */
     protected $templatePath;
 
-    public function __constructor(ResponseInterface $response, ?string $templatePath  = null)
+    public function __construct(ResponseInterface $response, $templatePath  = null)
     {
         $this->response = $response;
 
         if(null === $templatePath) {
-            $this->templatePath = dirname(__FILE__).'/../views/';
+            $this->templatePath = dirname(__FILE__).'/views/';
         } elseif(is_string($templatePath)) {
             $this->templatePath = $templatePath;
         } else {
@@ -35,8 +34,12 @@ class View
      */
     public function renderHtml($name, array $data=[]): ResponseInterface
     {
+
         $controller_template = $this->templatePath.$name.'.php';
+
         $layout_template = $this->templatePath.'layout.php';
+
+
         ob_start();
         require_once($controller_template);
         $contents = ob_get_contents();

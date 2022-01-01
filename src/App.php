@@ -14,17 +14,23 @@ class App
     private $route;
 
     /**
+     * @var string
+     */
+    private $viewsPath;
+
+    /**
      * App constructor.
      */
-    public function __construct(Router $route)
+    public function __construct(Router $route, string $viewsPath)
     {
         $this->route = $route;
+        $this->viewsPath = $viewsPath;
     }
     
     public function run ()
     {
         $current_request = $this->route->getCurrent();
-        $controller = new $current_request->controller($this->route->getRequest());
+        $controller = new $current_request->controller($this->route->getRequest(), $this->createResponse(), $this->createView());
         $response = $controller->{$current_request->method}();
 
         if(is_object($response) && $response instanceof Response) {
@@ -33,4 +39,16 @@ class App
             echo $response;
         }
     }
+
+    public function createResponse()
+    {
+        return new Response();
+    }
+
+    public function createView()
+    {
+        return new View($this->createResponse(), $this->viewsPath);
+    }
+
+
 }

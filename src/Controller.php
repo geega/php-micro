@@ -13,15 +13,23 @@ class Controller
 
     public $response;
 
-    public function __construct(Request $request)
+    public $view;
+
+    public function __construct(Request $request, Response $response, View $view)
     {
         $this->request = $request;
-        $this->response = new Response();
+        $this->response = $response;
+        $this->view = $view;
     }
 
     public function redirect($url)
     {
         header('Location: '.$url);
         exit;
+    }
+
+    public function getView()
+    {
+        return $this->view;
     }
 }
