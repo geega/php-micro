@@ -24,7 +24,13 @@ class ActiveRecordModel
      */
     public function getTableName(): string
     {
-        return get_called_class();
+        if($this->table)  {
+            return $this->table;
+        }
+
+        $array = explode('\\', get_called_class());
+
+        return array_pop($array);
     }
 
     /**
