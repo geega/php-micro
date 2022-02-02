@@ -8,15 +8,22 @@ class ActiveRecordModel
 
     public function __construct()
     {
+        $charset = 'utf8mb4';
         $host = getenv('PDO_HOST');
         $dbname = getenv('PDO_DATABASE');
         $user = getenv('PDO_USER');
         $password = getenv('PDO_PASSWORD');
 
+
+        if(getenv('PDO_CHARSET')) {
+            $charset = getenv('PDO_CHARSET');
+        }
+        
         $connect = "mysql:dbname={$dbname};host={$host}";
         $this->connect = new \PDO($connect, $user, $password);
         $this->connect->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->connect->exec("SET CHARACTER SET utf8");
+        $this->connect->exec("SET CHARACTER SET {$charset}");
+        $this->connect->exec("SET names {$charset}");
     }
 
     /**
@@ -122,7 +129,7 @@ class ActiveRecordModel
     /**
      * @param array $data
      * @return string
-     * 
+     *
      * @throws \Exception
      */
     static public function updateByPk(array $data)
