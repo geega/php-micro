@@ -2,6 +2,10 @@
 
 ## Versions 
 
+### 0.2.0
+
+- Introduced validator based on [rakit/validation](https://github.com/rakit/validation) 
+
 ### 0.1.2
 
 - Changed default charset for mysql connection utf8mb4 
