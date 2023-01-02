@@ -2,6 +2,10 @@
 
 ## Versions 
 
+### 0.5.1
+
+- Fixed `View` implemented `ViewInterface`. 
+
 ### 0.5.0
 
 - Adjusted `Service::executePost()` allowed send query params.

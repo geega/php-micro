@@ -4,7 +4,7 @@ namespace Geega\Micro;
 
 use Geega\Micro\Http\ResponseInterface;
 
-class View
+class View implements ViewInterface
 {
     /**
      * @var \Geega\Micro\Http\ResponseInterface
