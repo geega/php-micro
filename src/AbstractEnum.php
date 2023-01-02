@@ -11,6 +11,7 @@ abstract class AbstractEnum
 
     /**
      * Get list constants
+     *
      * @return mixed
      */
     public static function getList()
@@ -56,6 +57,7 @@ abstract class AbstractEnum
 
     /**
      * Get all values
+     *
      * @return array
      */
     public static function getValues()
@@ -65,7 +67,8 @@ abstract class AbstractEnum
 
     /**
      * Is valid value
-     * @param $value
+     *
+     * @param  $value
      * @return bool
      */
     public static function isValid($value)
@@ -75,7 +78,8 @@ abstract class AbstractEnum
 
     /**
      * Get label by name
-     * @param $value
+     *
+     * @param  $value
      * @return mixed
      */
     public static function getLabel($value)

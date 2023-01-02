@@ -14,7 +14,6 @@ class ActiveRecordModel
         $user = getenv('PDO_USER');
         $password = getenv('PDO_PASSWORD');
 
-
         if(getenv('PDO_CHARSET')) {
             $charset = getenv('PDO_CHARSET');
         }
@@ -31,7 +30,7 @@ class ActiveRecordModel
      */
     public function getTableName(): string
     {
-        if($this->table)  {
+        if($this->table) {
             return $this->table;
         }
 
@@ -42,7 +41,7 @@ class ActiveRecordModel
 
     /**
      * @param string $sql
-     * @param array $params
+     * @param array  $params
      *
      * @return array
      */
@@ -53,13 +52,14 @@ class ActiveRecordModel
         $statement = $this->connect->prepare($sql);
         $statement->execute($params);
         foreach ($statement as $row) {
-            $result[] = array_filter($row, function ($data) use ($attributes) {
-                return isset($attributes[$data]);
-            }, ARRAY_FILTER_USE_KEY);
+            $result[] = array_filter(
+                $row, function ($data) use ($attributes) {
+                    return isset($attributes[$data]);
+                }, ARRAY_FILTER_USE_KEY
+            );
         }
         return $result;
     }
-
 
     /**
      * @return mixed
@@ -73,7 +73,7 @@ class ActiveRecordModel
     }
 
     /**
-     * @param integer $id
+     * @param  integer $id
      *  a
      * @return mixed
      */
@@ -88,7 +88,7 @@ class ActiveRecordModel
     }
 
     /**
-     * @param array $data
+     * @param  array $data
      * @return string
      */
     static public function add($data)
@@ -96,9 +96,11 @@ class ActiveRecordModel
         try {
             $model = new static;
             $attributes = array_flip($model->attributes);
-            $data = array_filter($data, function ($data) use ($attributes) {
-                return isset($attributes[$data]);
-            }, ARRAY_FILTER_USE_KEY);
+            $data = array_filter(
+                $data, function ($data) use ($attributes) {
+                    return isset($attributes[$data]);
+                }, ARRAY_FILTER_USE_KEY
+            );
             $sql = 'INSERT INTO ' . $model->table . ' (';
             foreach ($data as $column => $value) {
                 $sql .= '`' . $column . '`, ';
@@ -127,7 +129,7 @@ class ActiveRecordModel
     }
 
     /**
-     * @param array $data
+     * @param  array $data
      * @return string
      *
      * @throws \Exception
@@ -138,9 +140,11 @@ class ActiveRecordModel
             $model = new static;
             $attributes = array_flip($model->attributes);
 
-            $data = array_filter($data, function ($data) use ($attributes) {
-                return isset($attributes[$data]);
-            }, ARRAY_FILTER_USE_KEY);
+            $data = array_filter(
+                $data, function ($data) use ($attributes) {
+                    return isset($attributes[$data]);
+                }, ARRAY_FILTER_USE_KEY
+            );
 
             $sql = 'UPDATE '.$model->getTableName().' SET ';
             if (empty($data[$model->key])) {
