@@ -2,6 +2,12 @@
 
 ## Versions 
 
+### 0.5.0
+
+- Adjusted `Service::executePost()` allowed send query params.
+- Adjusted `App::createResponse()` and `App::createView()` added type hints.
+- Introduced new `ViewInterface`. 
+
 ### 0.4.0 
 
 - Introduced abastract Enum class  

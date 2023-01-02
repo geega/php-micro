@@ -5,6 +5,7 @@ namespace Geega\Micro;
 
 
 use Geega\Micro\Http\Response;
+use Geega\Micro\Http\ResponseInterface;
 
 class App
 {
@@ -27,7 +28,7 @@ class App
         $this->viewsPath = $viewsPath;
     }
     
-    public function run ()
+    public function run()
     {
         $current_request = $this->route->getCurrent();
         $controller = new $current_request->controller($this->route->getRequest(), $this->createResponse(), $this->createView());
@@ -40,15 +41,13 @@ class App
         }
     }
 
-    public function createResponse()
+    public function createResponse(): ResponseInterface
     {
         return new Response();
     }
 
-    public function createView()
+    public function createView(): ViewInterface
     {
         return new View($this->createResponse(), $this->viewsPath);
     }
-
-
 }

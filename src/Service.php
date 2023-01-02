@@ -8,6 +8,7 @@ abstract class Service
 {
     /**
      * HTTP Get
+     *
      * @param $method
      * @param array $params
      *
@@ -21,41 +22,54 @@ abstract class Service
 
     /**
      * HTTP post
-     * @param $method
-     * @param array $params
+     *
+     * @param  $method
+     * @param  array $params
      * @return mixed
      */
-    static public function post($method, $params = [])
+    static public function post($method, $params = [], $queryParams = [])
     {
         $service = new static;
-        return $service->executePost($method, $params);
+        return $service->executePost($method, $params, $queryParams);
     }
 
     /**
      * Execute post request
+     *
      * @param $method
      * @param $params
      *
      * @return mixed
      */
-    public function executePost($method, $params)
+    public function executePost($method, $formData, $queryParams = [])
     {
         $url = $this->getUrl($method);
+
+        if (!empty($queryParams)) {
+            $url .= '?'.http_build_query($queryParams);
+        }
+
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,$url);
+
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($formData));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $output = curl_exec ($ch);
+
+        $output = curl_exec($ch);
+
         curl_close($ch);
+
         $output = json_decode($output, true);
+        
         return $output;
     }
 
     /**
      * Execute get request
-     * @param $method
-     * @param $params
+     *
+     * @param  $method
+     * @param  $params
      * @return mixed
      */
     public function executeGet($method, $params)
@@ -76,7 +90,8 @@ abstract class Service
 
     /**
      * Get url for request
-     * @param $method
+     *
+     * @param  $method
      * @return string
      */
     public function getUrl($method)
