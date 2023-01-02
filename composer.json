@@ -1,7 +1,7 @@
 {
     "name": "geega/php-micro",
     "description": "Simple micro php framework",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "minimum-stability": "dev",
     "authors": [
         {
