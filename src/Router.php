@@ -35,6 +35,7 @@ class Router
 
     /**
      * Router constructor.
+     *
      * @param Request $request
      */
     public function __construct(Request $request, $nsControllerTpl)
@@ -64,6 +65,7 @@ class Router
 
     /**
      * Get current
+     *
      * @return $this
      * @throws \Exception
      */
@@ -84,7 +86,7 @@ class Router
     }
 
     /**
-     * @param $route
+     * @param  $route
      * @throws \Exception
      */
     public function setRoute($route)
@@ -103,6 +105,7 @@ class Router
 
     /**
      * Get request
+     *
      * @return Request
      */
     public function getRequest()

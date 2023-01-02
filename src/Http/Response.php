@@ -8,10 +8,12 @@ class Response implements ResponseInterface
 {
     /**
      * Tamplate name and renader as html
-     * @param $html
+     *
+     * @param  $html
      * @return Response
      */
-    public function html($html) {
+    public function html($html)
+    {
         $this->headers['Content-Type'] = 'text/html';
         $this->content = $html;
         return $this;
@@ -19,7 +21,8 @@ class Response implements ResponseInterface
 
     /**
      * Data as json
-     * @param $data
+     *
+     * @param  $data
      * @return $this
      */
     public function json($data)

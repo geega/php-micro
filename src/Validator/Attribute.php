@@ -29,7 +29,7 @@ class Attribute
     protected $rawRules = [];
 
     /**
-     * @param string $name
+     * @param string      $name
      * @param null|string $alias
      */
     public function __construct($name, $alias = null)

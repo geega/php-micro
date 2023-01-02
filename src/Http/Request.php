@@ -52,10 +52,11 @@ class Request implements RequestInterface
 
     /**
      * Get param from query
+     *
      * @deprecated
-     * @param $name
-     * @return mixed
-     * @throws \Exception
+     * @param      $name
+     * @return     mixed
+     * @throws     \Exception
      */
     public function getParam($name)
     {
@@ -64,11 +65,12 @@ class Request implements RequestInterface
 
 
     /**
-     * @param $name
+     * @param  $name
      * @return mixed
      * @throws NotFoundParamException
      */
-    public function getQueryParamOrFail($name) {
+    public function getQueryParamOrFail($name)
+    {
         if (isset($this->queryParams[$name])) {
             return $this->queryParams[$name];
         } else {
@@ -76,7 +78,8 @@ class Request implements RequestInterface
         }
     }
 
-    public function getPostParamOrFail($name) {
+    public function getPostParamOrFail($name)
+    {
         if (isset($this->post[$name])) {
             return $this->post[$name];
         } else {
@@ -84,14 +87,14 @@ class Request implements RequestInterface
         }
     }
     /**
-     * @param $name
-     * @param null $default
+     * @param  $name
+     * @param  null $default
      * @return mixed
      * @throws \Exception
      */
     public function getQueryParam($name, $default = null)
     {
-        if(isset($this->queryParams[$name]))  {
+        if(isset($this->queryParams[$name])) {
             return $this->queryParams[$name];
         }
 
@@ -100,14 +103,14 @@ class Request implements RequestInterface
 
 
     /**
-     * @param $name
-     * @param null $default
+     * @param  $name
+     * @param  null $default
      * @return mixed
      * @throws \Exception
      */
     public function getPostParam($name, $default = null)
     {
-        if(isset($this->post[$name]))  {
+        if(isset($this->post[$name])) {
             return $this->post[$name];
         }
 
