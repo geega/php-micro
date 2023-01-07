@@ -29,6 +29,8 @@ class AppTest extends TestCase
 
     public function testCreateResponse()
     {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI'] = '/';
         $request = new Request();
         $router = new Router($request, '\\Geega\\Micro\\Tests\\AppTest\\Controller\\{{NAME}}Controller');
         $app = new App($router, '');
