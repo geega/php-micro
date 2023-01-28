@@ -33,8 +33,16 @@ class Request implements RequestInterface
      */
     public function __construct()
     {
-        $this->requestMethod =  $_SERVER['REQUEST_METHOD'];
-        $this->uri = $_SERVER['REQUEST_URI'];
+        $this->requestMethod = 'GET';
+        $this->uri = '/';
+
+        if (isset($_SERVER['REQUEST_METHOD'])) {
+            $this->requestMethod =  $_SERVER['REQUEST_METHOD'];
+        }
+
+        if (isset($_SERVER['REQUEST_URI'])) {
+            $this->uri = $_SERVER['REQUEST_URI'];
+        }
 
         $parameters = parse_url($this->uri);
 

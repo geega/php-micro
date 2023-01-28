@@ -2,6 +2,20 @@
 
 ## Versions 
 
+### 0.5.2
+
+- Fixed `Geega\Micro\Http\Request`, set default values. 
+- Introduced method `ActiveRecordModel::find()` for support simple condition.
+Example: 
+```php
+$condition = [
+    ['created_at', $timeFrom, '>='],
+    ['created_at', $timeTill, '<='],
+];
+
+ActiveRecordModel::find($condition)
+``` 
+
 ### 0.5.1
 
 - Fixed `View` implemented `ViewInterface`. 

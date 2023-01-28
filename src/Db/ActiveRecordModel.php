@@ -2,6 +2,8 @@
 
 namespace Geega\Micro\Db;
 
+use function PHPUnit\Framework\isEmpty;
+
 class ActiveRecordModel
 {
     public $connect;
@@ -62,6 +64,25 @@ class ActiveRecordModel
     }
 
     /**
+     * @param $sqlQuery
+     * @param array $placeHolders
+     *
+     * @return array|false
+     */
+    protected function bindExecute($sqlQuery, array $placeHolders = array())
+    {
+        $statement = $this->connect->prepare($sqlQuery);
+        foreach ($placeHolders as $column => $value) {
+            $statement->bindValue(':'.$column, $value);
+        }
+        $statement->execute();
+
+        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @depricated please use findAll method.
+     *
      * @return mixed
      */
     static public function getAll()
@@ -70,6 +91,14 @@ class ActiveRecordModel
         $result = $model->execute('SELECT * FROM ' . $model->table);
 
         return $result;
+    }
+
+    /**
+     * @return mixed
+     */
+    static public function findAll()
+    {
+        return static::getAll();
     }
 
     /**
@@ -85,6 +114,40 @@ class ActiveRecordModel
             $result = current($result);
         }
         return $result;
+    }
+
+    /**
+     * @param array $condition
+     * @return mixed
+     */
+    static public function find(array $condition = array())
+    {
+        if (empty($condition)) {
+            return static::findAll();
+        }
+
+        $model = new static;
+        $placeHolders = [];
+
+        $sqlQuery = 'SELECT * FROM '.$model->getTableName().' WHERE  1=1 ';
+        foreach ($condition as $param) {
+            $key = $keyPlaceholder = $param[0];
+            $value = $param[1];
+            $sign  = '=';
+            if(isset($param[2])) {
+                $sign = $param[2];
+                if($sign == '>=' || $sign == '>') {
+                    $keyPlaceholder .= '_more';
+                } elseif($sign == '<=' || $sign == '<') {
+                    $keyPlaceholder .= '_less';
+                }
+            }
+
+            $sqlQuery .= " AND `{$key}` {$sign} :{$keyPlaceholder} ";
+            $placeHolders[$keyPlaceholder] = $value;
+        }
+
+        return $model->bindExecute($sqlQuery, $placeHolders);
     }
 
     /**
