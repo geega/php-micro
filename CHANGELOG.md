@@ -2,6 +2,12 @@
 
 ## Versions 
 
+### 0.6.0
+
+- Fixed `ActiveRecordModel::updateByPk()` method. Return affected rows instead error message or string `0`.
+- Introduced method `ActiveRecordModel::delteByPk()` for support delete record by primary key.
+
+
 ### 0.5.2
 
 - Fixed `Geega\Micro\Http\Request`, set default values. 

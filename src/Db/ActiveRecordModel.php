@@ -2,10 +2,14 @@
 
 namespace Geega\Micro\Db;
 
-use function PHPUnit\Framework\isEmpty;
+use PDO;
+use PDOExecption;
 
 class ActiveRecordModel
 {
+    /**
+     * @var \PDO
+     */
     public $connect;
 
     public function __construct()
@@ -16,13 +20,13 @@ class ActiveRecordModel
         $user = getenv('PDO_USER');
         $password = getenv('PDO_PASSWORD');
 
-        if(getenv('PDO_CHARSET')) {
+        if (getenv('PDO_CHARSET')) {
             $charset = getenv('PDO_CHARSET');
         }
-        
+
         $connect = "mysql:dbname={$dbname};host={$host}";
-        $this->connect = new \PDO($connect, $user, $password);
-        $this->connect->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->connect = new PDO($connect, $user, $password);
+        $this->connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->connect->exec("SET CHARACTER SET {$charset}");
         $this->connect->exec("SET names {$charset}");
     }
@@ -32,7 +36,7 @@ class ActiveRecordModel
      */
     public function getTableName(): string
     {
-        if($this->table) {
+        if ($this->table) {
             return $this->table;
         }
 
@@ -43,7 +47,7 @@ class ActiveRecordModel
 
     /**
      * @param string $sql
-     * @param array  $params
+     * @param array $params
      *
      * @return array
      */
@@ -56,8 +60,8 @@ class ActiveRecordModel
         foreach ($statement as $row) {
             $result[] = array_filter(
                 $row, function ($data) use ($attributes) {
-                    return isset($attributes[$data]);
-                }, ARRAY_FILTER_USE_KEY
+                return isset($attributes[$data]);
+            }, ARRAY_FILTER_USE_KEY
             );
         }
         return $result;
@@ -73,11 +77,11 @@ class ActiveRecordModel
     {
         $statement = $this->connect->prepare($sqlQuery);
         foreach ($placeHolders as $column => $value) {
-            $statement->bindValue(':'.$column, $value);
+            $statement->bindValue(':' . $column, $value);
         }
         $statement->execute();
 
-        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -102,7 +106,7 @@ class ActiveRecordModel
     }
 
     /**
-     * @param  integer $id
+     * @param integer $id
      *  a
      * @return mixed
      */
@@ -129,16 +133,16 @@ class ActiveRecordModel
         $model = new static;
         $placeHolders = [];
 
-        $sqlQuery = 'SELECT * FROM '.$model->getTableName().' WHERE  1=1 ';
+        $sqlQuery = 'SELECT * FROM ' . $model->getTableName() . ' WHERE  1=1 ';
         foreach ($condition as $param) {
             $key = $keyPlaceholder = $param[0];
             $value = $param[1];
-            $sign  = '=';
-            if(isset($param[2])) {
+            $sign = '=';
+            if (isset($param[2])) {
                 $sign = $param[2];
-                if($sign == '>=' || $sign == '>') {
+                if ($sign == '>=' || $sign == '>') {
                     $keyPlaceholder .= '_more';
-                } elseif($sign == '<=' || $sign == '<') {
+                } elseif ($sign == '<=' || $sign == '<') {
                     $keyPlaceholder .= '_less';
                 }
             }
@@ -151,7 +155,7 @@ class ActiveRecordModel
     }
 
     /**
-     * @param  array $data
+     * @param array $data
      * @return string
      */
     static public function add($data)
@@ -161,8 +165,8 @@ class ActiveRecordModel
             $attributes = array_flip($model->attributes);
             $data = array_filter(
                 $data, function ($data) use ($attributes) {
-                    return isset($attributes[$data]);
-                }, ARRAY_FILTER_USE_KEY
+                return isset($attributes[$data]);
+            }, ARRAY_FILTER_USE_KEY
             );
             $sql = 'INSERT INTO ' . $model->table . ' (';
             foreach ($data as $column => $value) {
@@ -182,58 +186,84 @@ class ActiveRecordModel
             try {
                 $statement->execute();
                 return $model->connect->lastInsertId();
-            } catch (\PDOExecption $e) {
+            } catch (PDOExecption $e) {
                 $model->connect->rollback();
                 return "Error" . $e->getMessage();
             }
-        } catch (\PDOExecption $e) {
+        } catch (PDOExecption $e) {
             return "Error" . $e->getMessage();
         }
     }
 
     /**
-     * @param  array $data
-     * @return string
+     * @param array $data
+     * @return int
      *
      * @throws \Exception
      */
-    static public function updateByPk(array $data)
+    static public function updateByPk(array $data, $id = null)
     {
-        try {
-            $model = new static;
-            $attributes = array_flip($model->attributes);
+        $model = new static;
+        $attributes = array_flip($model->attributes);
 
-            $data = array_filter(
-                $data, function ($data) use ($attributes) {
-                    return isset($attributes[$data]);
-                }, ARRAY_FILTER_USE_KEY
-            );
+        $data = array_filter(
+            $data, function ($data) use ($attributes) {
+            return isset($attributes[$data]);
+        }, ARRAY_FILTER_USE_KEY
+        );
 
-            $sql = 'UPDATE '.$model->getTableName().' SET ';
-            if (empty($data[$model->key])) {
-                throw new \Exception('Not found primary key');
-            }
+        $sql = 'UPDATE ' . $model->getTableName() . ' SET ';
+        if (empty($data[$model->key])) {
+            throw new \Exception('Not found primary key');
+        }
+
+        $primary_key = $id;
+        if ($id === null && isset($data[$model->key])) {
             $primary_key = $data[$model->key];
             unset($data[$model->key]);
-            foreach ($data as $key => $value) {
-                $sql .= ''.$key.' = :'.$key.', ';
-            }
-            $sql = trim($sql, ', ');
-            $sql .= ' WHERE '.$model->key.' = :'.$model->key;
-            $statement = $model->connect->prepare($sql);
-            foreach ($data as $column => $value) {
-                $statement->bindValue(':'.$column, $value);
-            }
-            $statement->bindValue(':'.$model->key, $primary_key);
-            try {
-                $statement->execute();
-                return $model->connect->lastInsertId();
-            } catch(\PDOExecption $e) {
-                $model->connect->rollback();
-                return "Error" . $e->getMessage();
-            }
-        } catch( \PDOExecption $e ) {
-            return "Error" . $e->getMessage();
+        } elseif ($id === null) {
+            throw new \Exception( sprintf('Not found primary key (%s) in update data', $model->key));
+        }
+
+        foreach ($data as $key => $value) {
+            $sql .= '' . $key . ' = :' . $key . ', ';
+        }
+        $sql = trim($sql, ', ');
+        $sql .= ' WHERE ' . $model->key . ' = :' . $model->key;
+        $statement = $model->connect->prepare($sql);
+        foreach ($data as $column => $value) {
+            $statement->bindValue(':' . $column, $value);
+        }
+        $statement->bindValue(':' . $model->key, $primary_key);
+        try {
+            $statement->execute();
+            return $statement->rowCount();
+        } catch (PDOExecption $e) {
+            $model->connect->rollback();
+            throw new \PDOException($e->getMessage());
+        }
+    }
+
+    /**
+     * @param $pk
+     * @return int
+     */
+    static public function delteByPk($pk)
+    {
+        $model = new static;
+
+        $sqlTpl = 'DELETE FROM `%s` WHERE `%s`.`%s` = :%s';
+        $sql = sprintf($sqlTpl, $model->getTableName(), $model->getTableName(), $model->key, $model->key);
+
+        $statement = $model->connect->prepare($sql);
+        $statement->bindValue(':' . $model->key, $pk);
+
+        try {
+            $statement->execute();
+            return $statement->rowCount();
+        } catch (PDOExecption $e) {
+            $model->connect->rollback();
+            throw new \PDOException($e->getMessage());
         }
     }
 }
