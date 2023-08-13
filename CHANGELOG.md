@@ -2,6 +2,12 @@
 
 ## Versions 
 
+### 0.6.1 (draft)
+
+- Introduced method `ActiveRecordModel::deleteByPk()` for support delete record by primary key.
+- Deprecated method `ActiveRecordModel::delteByPk()`.
+
+
 ### 0.6.0
 
 - Fixed `ActiveRecordModel::updateByPk()` method. Return affected rows instead error message or string `0`.

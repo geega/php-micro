@@ -1,10 +1,11 @@
 # php-micro
 Simple php micro framework
 
+Note: This packege is under development. Also have zero tests. Use it at your own risk.
+
 ### DTO 
 
 See more https://github.com/spatie/data-transfer-object/blob/1.14.1/README.md
-
 
 
 ### Enum 

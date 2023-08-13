@@ -5,7 +5,6 @@ use Geega\Micro\App;
 use Geega\Micro\Http\Request;
 use Geega\Micro\Http\Response;
 use Geega\Micro\Router;
-use Geega\Micro\Tests\AppTest\Controller\MainController;
 use PHPUnit\Framework\TestCase;
 
 

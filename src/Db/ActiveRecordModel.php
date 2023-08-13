@@ -245,10 +245,22 @@ class ActiveRecordModel
     }
 
     /**
-     * @param $pk
+     * @deprecated Due to BC break, please use deleteByPk method.
+     *
+     * @param mixed $pk
+     * 
      * @return int
      */
     static public function delteByPk($pk)
+    {
+        return static::deleteByPk($pk);
+    }
+
+    /**
+     * @param $pk
+     * @return int
+     */
+    static public function deleteByPk($pk)
     {
         $model = new static;
 
